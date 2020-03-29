@@ -16,6 +16,7 @@ static void die(const char *s)
     exit(1);
 }
 
+
 int main(int argc, char **argv)
 {
 	//Check terminal input
@@ -26,15 +27,25 @@ int main(int argc, char **argv)
 
 	printf("port number: ");
 	char port[100];
-	while(fgets(port, sizeof(port), stdin) != NULL){
+	pid_t pid = 0;
+	while(1){
+		//Check child processes status
+		while ((pid = waitpid( (pid_t) -1, NULL, WNOHANG)) > 0){
+            fprintf(stderr, "[pid=%d] ", (int)pid);
+            fprintf(stderr, "mdb-lookup-server terminated\n");
+        }
+		//Read user input
+		fgets(port, sizeof(port), stdin);
 		if (port[strlen(port)-1] == '\n'){
 			port[strlen(port)-1] = 0;
 		}
+		//If user presses ENTER...
 		if (port[0] == 0){
 			printf("port number: ");
 			continue;
 		}
-    	pid_t pid = fork();
+		//Just fork
+    	pid = fork();
  		if (pid < 0) {
 			die("fork failed");
     	} else if (pid == 0) {
@@ -44,10 +55,7 @@ int main(int argc, char **argv)
     		execl("./mdb-lookup-server-nc.sh", "mdb-lookup-server-nc.sh", port, (char *)0);
 	    	die("execl failed");
     	} else {
-    		while ((pid = waitpid( (pid_t) -1, NULL, WNOHANG)) != 0){
-				fprintf(stderr, "[pid=%d] ", (int)pid);
-            	fprintf(stderr, "mdb-lookup-server terminated\n");
-			}
+    		//parent process
     	}
 		fflush(stdin);
 	}
