@@ -25,17 +25,12 @@ int main(int argc, char **argv)
     }
 
 	printf("port number: ");
-	char input[1000];
-	while(1){
-		fgets(input, 1000, stdin);
-		char *port = calloc(6, 1);
-        strncpy(port, input, 5);
-        for(int i=0; i<6; i++){
-            if(!isprint(port[i])){
-                port[i] = '\0';
-            }
-        }
-		if (port[0] == '\n'){
+	char port[100];
+	while(fgets(port, sizeof(port), stdin) != NULL){
+		if (port[strlen(port)-1] == '\n'){
+			port[strlen(port)-1] = 0;
+		}
+		if (port[0] == 0){
 			printf("port number: ");
 			continue;
 		}
@@ -45,23 +40,16 @@ int main(int argc, char **argv)
     	} else if (pid == 0) {
 	    	// child process
     		fprintf(stderr, "[pid=%d] ", (int)getpid());
-    		fprintf(stderr, "mdb-lookup-server started on port %s\n", port);
+    		fprintf(stderr, "mdb-lookup-server started on port %s\nport number: ", port);
     		execl("./mdb-lookup-server-nc.sh", "mdb-lookup-server-nc.sh", port, (char *)0);
 	    	die("execl failed");
     	} else {
-    		// parent process
-    		if (waitpid(pid,
-            	NULL, // no status
-            	0) // no options
-        	!= pid)
-        	die("waitpid failed");
-    		fprintf(stderr, "[pid=%d] ", (int)pid);
-    		fprintf(stderr, "mdb-lookup-server terminated\n");
-			printf("port number: ");
+    		while ((pid = waitpid( (pid_t) -1, NULL, WNOHANG)) != 0){
+				fprintf(stderr, "[pid=%d] ", (int)pid);
+            	fprintf(stderr, "mdb-lookup-server terminated\n");
+			}
     	}
-		free(port);
 		fflush(stdin);
-		//printf("\nport number: ");
 	}
     return 0;
 }
