@@ -3,6 +3,7 @@
   - lab 4
 
 1a)
+Works as required by the lab handout.
 
 1b) 
 The process tree is below:
@@ -17,5 +18,26 @@ The process tree is below:
  4660  4661  4655 12148 pts/19    4655 S+    3951   0:00  |                       \_ /home/jae/cs3157-pub/bin/mdb-lookup /home/jae/cs3157-pub/bin/mdb-cs3157
 Shell scripts:
 mdb-lookup-server-nc.sh
-1c)
 
+1c)
+The terminal output is below, which is the same as Jae's except for the process ID:
+port number: 8888
+[pid=8003] mdb-lookup-server started on port 8888
+
+port number: 9999
+[pid=8072] mdb-lookup-server started on port 9999
+
+port number: 7777
+[pid=8118] mdb-lookup-server started on port 7777
+
+port number: 
+[pid=8072] mdb-lookup-server terminated
+port number: 
+port number: 
+port number: 
+port number: 
+[pid=8003] mdb-lookup-server terminated
+[pid=8118] mdb-lookup-server terminated
+port number: 
+port number: 
+port number: ^C
