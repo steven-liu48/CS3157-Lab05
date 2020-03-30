@@ -24,10 +24,13 @@ int main(int argc, char **argv)
 		fprintf(stderr, "usage: %s <port>\n", argv[0]);
     	exit(1);
     }
-
+	
+	//Print and initialize variables
 	printf("port number: ");
 	char port[100];
 	pid_t pid = 0;
+
+	//Use 1 as the loop parameter, and quit when user inputs Ctrl + C
 	while(1){
 		//Check child processes status
 		while ((pid = waitpid( (pid_t) -1, NULL, WNOHANG)) > 0){
@@ -44,18 +47,19 @@ int main(int argc, char **argv)
 			printf("port number: ");
 			continue;
 		}
+
 		//Just fork
     	pid = fork();
  		if (pid < 0) {
 			die("fork failed");
     	} else if (pid == 0) {
-	    	// child process
+	    	//child process: execl
     		fprintf(stderr, "[pid=%d] ", (int)getpid());
-    		fprintf(stderr, "mdb-lookup-server started on port %s\nport number: ", port);
+    		fprintf(stderr, "mdb-lookup-server started on port %s\n\nport number: ", port);
     		execl("./mdb-lookup-server-nc.sh", "mdb-lookup-server-nc.sh", port, (char *)0);
 	    	die("execl failed");
     	} else {
-    		//parent process
+    		//parent process: continue the loop
     	}
 		fflush(stdin);
 	}
