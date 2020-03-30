@@ -20,6 +20,7 @@ Shell scripts:
 mdb-lookup-server-nc.sh
 
 1c)
+Run "make vtest" to use valgrind.
 The terminal output is below, which is the same as Jae's except for the process ID:
 port number: 8888
 [pid=8003] mdb-lookup-server started on port 8888
