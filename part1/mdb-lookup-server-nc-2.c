@@ -38,6 +38,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "mdb-lookup-server terminated\n");
         }
 		//Read user input
+		//printf("port number: ");
 		fgets(port, sizeof(port), stdin);
 		if (port[strlen(port)-1] == '\n'){
 			port[strlen(port)-1] = 0;
@@ -55,11 +56,12 @@ int main(int argc, char **argv)
     	} else if (pid == 0) {
 	    	//child process: execl
     		fprintf(stderr, "[pid=%d] ", (int)getpid());
-    		fprintf(stderr, "mdb-lookup-server started on port %s\n\nport number: ", port);
+    		fprintf(stderr, "mdb-lookup-server started on port %s\n", port);
     		execl("./mdb-lookup-server-nc.sh", "mdb-lookup-server-nc.sh", port, (char *)0);
 	    	die("execl failed");
     	} else {
     		//parent process: continue the loop
+			printf("port number: ");
     	}
 		fflush(stdin);
 	}
